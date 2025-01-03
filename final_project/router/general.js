@@ -55,4 +55,22 @@ public_users.get('/title/:title', (req, res) => {
     .catch(error => res.status(404).json({ message: error }));
 });
 
+public_users.get('/reviews/:id', async (req, res) => {
+  const bookId = req.params.id;
+  
+  try {
+    const book = books[bookId];
+    if (book && book.reviews && Object.keys(book.reviews).length > 0) {
+      res.status(200).json({ reviews: book.reviews });
+    } else if (book) {
+      res.status(200).json({ message: `No reviews for the book with ID ${bookId}.` });
+    } else {
+      res.status(404).json({ message: `Book with ID ${bookId} not found.` });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching reviews.", error: error.message });
+  }
+});
+
+
 module.exports.general = public_users;
